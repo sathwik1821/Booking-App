@@ -6,9 +6,9 @@ import ICON from '@/lib/icons';
 
 const Footer = () => {
   return (
-    <div className='bg-secondary mt-16 pt-4'>
+    <div className='bg-secondary mt-8 sm:mt-16 pt-2 sm:pt-4'>
         <footer className='container pl-16 pr-8 w-full '>
-          <div className='flex gap-12 flex-nowrap overflow-x-auto   mt-4'>
+          <div className='flex gap-12 flex-nowrap overflow-x-auto scrollbar   mt-4'>
             {
               FOOTER_SECTION.map((item,sectionIndex)=>(
                 <div key={sectionIndex}>
@@ -33,24 +33,25 @@ const Footer = () => {
         </footer>
 
 
-        <footer className="bg-brand  flex flex-nowrap py-2">
-          <div className="container flex items-center  gap-3 ml-10">
+        <footer className="bg-brand flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 px-4">
+          <div className="flex justify-center sm:justify-start gap-4 w-full sm:w-auto mb-2 sm:mb-0">
             {SOCIAL_LINKS.map((application, applicationIndex) => {
               const SocialIcon = ICON[application.icon];
               return (
                 <a
                   key={applicationIndex}
                   href={application.href}
+                  className="flex-1 sm:flex-none flex justify-center"
                 >
                   {SocialIcon && (
-                    <SocialIcon className="text-white h-4 w-4 hover:opacity-80" />
+                    <SocialIcon className="text-white h-5 w-5 hover:opacity-80" />
                   )}
                 </a>
               );
             })}
           </div>
 
-          <div className="text-white text-sm whitespace-nowrap mr-10">
+          <div className="text-white text-sm text-center sm:text-right whitespace-nowrap">
             Copyright © 2025 Booking.com - All rights reserved
           </div>
       </footer>

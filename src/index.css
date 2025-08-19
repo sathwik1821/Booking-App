@@ -134,3 +134,22 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+.scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* no white bg */
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--brand-color), var(--primary));
+  border-radius: 9999px; /* rounded pill */
+  transition: background 0.3s ease;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--primary), var(--brand-color));
+}
