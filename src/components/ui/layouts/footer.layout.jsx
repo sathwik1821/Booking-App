@@ -33,7 +33,7 @@ const Footer = () => {
         </footer>
 
 
-        <footer className="bg-brand flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 px-4">
+        <footer className="bg-brand flex flex-col sm:flex-row sm:items-center sm:justify-between py-2 px-1 sm:px-4">
           <div className="flex justify-center sm:justify-start gap-4 w-full sm:w-auto mb-2 sm:mb-0">
             {SOCIAL_LINKS.map((application, applicationIndex) => {
               const SocialIcon = ICON[application.icon];
@@ -51,7 +51,7 @@ const Footer = () => {
             })}
           </div>
 
-          <div className="text-white text-sm text-center sm:text-right whitespace-nowrap">
+          <div className="text-white text-xs sm:text-sm text-center  sm:text-right whitespace-nowrap tracking-tighter sm:tracking-normal overflow-hidden">
             Copyright © 2025 Booking.com - All rights reserved
           </div>
       </footer>
