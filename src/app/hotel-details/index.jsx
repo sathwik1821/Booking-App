@@ -18,12 +18,11 @@ const HotelDetails = () => {
             <div className='flex-1 space-y-8'>
                 <HotelMetaDetails hotel={hotelData.hotel}/>
                 <HotelRoomsPicker rooms={hotelData.rooms}/>
-                <HotelPolicy/>
+                <HotelPolicy hotelPolicy={hotelInfo.hotelPolicy}/>
             </div>
             <aside className='shrink-0  w-[320px] border border-border shadow-md rounded-lg sticky top-4 h-min px-2 py-2'>
-                <HotelCheckOutCard/>
+                <HotelCheckOutCard rooms={hotelData.rooms} cancellationPolicy={hotelInfo.cancellationPolicy}/>
             </aside>
-
         </div>
 
 

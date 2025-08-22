@@ -50,7 +50,7 @@ const Room=({id,type,photos,amenities,price,isSelected})=>{
 
             <div className='flex mt-5'>
                 <div className='flex-1'>
-                  <h3 className='gap-2'>₹{price} <span className='text-muted-foreground text-sm line-through'>₹{price*2}</span></h3>
+                  <h3 className='gap-2'>₹{price} <span className='text-muted-foreground text-sm line-through'>₹{price*1.5}</span></h3>
                 </div>
                 <div className='shrink-0'>
                   {isSelected && <Button variant="outline" disabled={isSelected} className='flex items-center gap-2  py-1 rounded-sm bg-secondary cursor-pointer w-[180px] font-semibold disabled:opacity-80'>
