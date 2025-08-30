@@ -1,4 +1,4 @@
-import { Bed, CarFront, CarTaxiFront, FerrisWheel, Plane,Star,Gem,Heart,Check,CircleCheck,Zap,Info } from "lucide-react";
+import { Bed, CarFront, CarTaxiFront, FerrisWheel, Plane,Star,Gem,Heart,Check,CircleCheck,Zap,Info,Eye,X,MapPin,CalendarDays,User2,ChevronDown,Minus,Plus } from "lucide-react";
 
 export default {
   bed: Bed,
@@ -13,6 +13,15 @@ export default {
   circleCheck: CircleCheck,
   zap: Zap,
   info: Info,
+  eye: Eye,
+  close: X,
+  location: MapPin,
+  calendar: CalendarDays,
+  user: User2,
+  dropdown: ChevronDown,
+  minus: Minus,
+  plus: Plus,
+
   twitter: ({ size, ...props }) => (
     <svg
       width={size}

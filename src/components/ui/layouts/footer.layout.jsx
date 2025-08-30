@@ -18,6 +18,7 @@ const Footer = () => {
                       item.links.map((link,index)=>
                       (
                         <a
+                          key={link.text + index}
                           href={link.href || '#'}
                           className="hover:underline text-gray-500"
                           >
