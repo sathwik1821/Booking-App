@@ -73,7 +73,7 @@ const DateSelect = ({form}) => {
                             field.onChange(value);
                             }}
                         />
-                        </PopoverContent>
+                    </PopoverContent>
                 </>
                 )}
                 />
