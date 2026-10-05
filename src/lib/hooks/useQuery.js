@@ -1,42 +1,44 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '../axios-instance';
 
-function useMutation(url, method) {
-  const [mutateState, setMutateState] = React.useState({
+export default function useQuery({ url, options = {} }) {
+  const [queryState, setQueryState] = useState({
     data: null,
-    pending: false,
+    isLoading: false,
     error: null,
   });
 
-  const mutate = async (payload, cb) => {
-    setMutateState({ data: null, pending: true, error: null });
-    try {
-      const response = await axiosInstance({
-        method: method,
-        url: url,
-        data: payload,
-      });
-      setMutateState((prev) => ({ ...prev, data: response.data }));
-      
-      if (cb && cb.onSuccess && typeof cb.onSuccess === 'function') {
-        cb.onSuccess(response);
-      }
-    } catch (err) {
-      setMutateState((prev) => ({
-        ...prev,
-        error: err.message,
-      }));
-      if (cb && cb.onError && typeof cb.onError === 'function') {
-        cb.onError(err);
-      }
-    } finally {
-      setMutateState((prev) => ({ ...prev, pending: false }));
-    }
-  };
-  return {
-    ...mutateState,
-    mutate,
-  };
-}
+  async function fetchData() {
+    setQueryState({
+      data: null,
+      isLoading: true,
+      error: null,
+    });
 
-export default useMutation;
+    try {
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await axiosInstance(url, options);
+      setQueryState({
+        data: response.data,
+        isLoading: false,
+        error: null,
+      });
+    } catch (e) {
+      setQueryState((prev) => ({
+        ...prev,
+        error: e.message,
+      }));
+    } finally {
+      setQueryState((prev) => ({
+        ...prev,
+        isLoading: false,
+      }));
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [url]);
+
+  return { ...queryState };
+}

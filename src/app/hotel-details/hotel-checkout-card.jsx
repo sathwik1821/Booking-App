@@ -1,69 +1,112 @@
-import React from 'react'
-import icons from '@/lib/icons';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+﻿import React from 'react';
+import { CalendarDays, Users, Loader2, Lock, LogIn, Sparkles, CheckCircle2 } from 'lucide-react';
+import dayjs from 'dayjs';
 
-const ZapIcon=icons["zap"];
-const InfoIcon=icons["info"];
+const HotelCheckOutCard = ({ hotel, selectedRoom, checkin, checkout, rooms, onBook, bookingLoading, isAuthenticated }) => {
+  const nights = (checkin && checkout)
+    ? Math.max(1, dayjs(checkout).diff(dayjs(checkin), 'day'))
+    : 1;
 
+  const pricePerNight = selectedRoom?.price ?? 0;
+  const subtotal = pricePerNight * nights * rooms;
+  const taxes = Math.round(subtotal * 0.18);
+  const total = subtotal + taxes;
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onBook(false);
+  };
 
-const HotelCheckOutCard = ({rooms,cancellationPolicy}) => {
-  const selctedRooom=rooms.find((room)=>room.isSelected);
   return (
-   
+    <div className="bg-card border border-border rounded-2xl shadow-xl p-6 space-y-5">
+      <div>
+        <p className="text-xs text-muted-foreground mb-1 font-medium uppercase tracking-wide">Selected Room</p>
+        <h3 className="font-bold text-lg text-gray-900">{selectedRoom ? selectedRoom.type : '— Select a room'}</h3>
+      </div>
 
-    <section>
-        <div className='px-4 py-4'>
-          <h1 className='gap-2 text-2xl font-bold'>₹{selctedRooom.price} <span className='text-muted-foreground text-sm line-through'>₹{selctedRooom.price*1.5}</span></h1>
+      {/* Dates */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-secondary rounded-xl p-3">
+          <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
+            <CalendarDays size={11} />Check-in
+          </p>
+          <p className="font-semibold text-sm">{checkin ? dayjs(checkin).format('DD MMM YYYY') : '—'}</p>
         </div>
+        <div className="bg-secondary rounded-xl p-3">
+          <p className="text-xs text-muted-foreground flex items-center gap-1 mb-1">
+            <CalendarDays size={11} />Check-out
+          </p>
+          <p className="font-semibold text-sm">{checkout ? dayjs(checkout).format('DD MMM YYYY') : '—'}</p>
+        </div>
+      </div>
 
-        <div className='px-4 space-y-4'>
-          <div className='flex'>
-            <span className='flex-1'>Your Savings</span>
-            <span className='shrink-0'>₹{selctedRooom.price*0.5}</span>
+      <div className="flex items-center gap-2 bg-secondary rounded-xl p-3">
+        <Users size={14} className="text-muted-foreground" />
+        <p className="text-sm font-medium">{rooms} room{rooms > 1 ? 's' : ''} &middot; {nights} night{nights > 1 ? 's' : ''}</p>
+      </div>
+
+      {/* Price breakdown */}
+      {selectedRoom && (
+        <div className="space-y-2 text-sm pt-2">
+          <div className="flex justify-between text-muted-foreground">
+            <span>&#8377;{Math.round(pricePerNight).toLocaleString('en-IN')} &times; {nights} night{nights > 1 ? 's' : ''} &times; {rooms} room{rooms > 1 ? 's' : ''}</span>
+            <span>&#8377;{subtotal.toLocaleString('en-IN')}</span>
           </div>
-
-          <div className='flex'>
-            <span className='flex-1'>Total Price</span>
-            <span className='shrink-0'>₹{selctedRooom.price*1.5}</span>
+          <div className="flex justify-between text-muted-foreground">
+            <span>Taxes &amp; fees (18% GST)</span>
+            <span>&#8377;{taxes.toLocaleString('en-IN')}</span>
           </div>
-
-          <button className='bg-brand px-2 py-2 rounded-sm mt-4 cursor-pointer hover:opacity-80 w-full text-white font-bold' >Continue to Book</button>
-
-
-        </div>
-
-        <div className='mt-4 space-y-4'>
-          <div className='flex items-baseline gap-2 px-2 '>
-            <span className='fill-red-500 text-red-500 '>{ZapIcon && <ZapIcon size={16}/>}</span>
-            <span className='text-muted-foreground'> 1k+ people booked this oyo in the last 6 months</span>
+          <div className="flex justify-between font-bold text-base pt-2 border-t border-border text-gray-900">
+            <span>Total Amount</span>
+            <span>&#8377;{total.toLocaleString('en-IN')}</span>
           </div>
-
-        <div className="flex items-center gap-2">
-          <HoverCard className="openDelay={0} closeDelay={0}">
-            {/* Trigger element */}
-            <HoverCardTrigger className="flex items-center gap-2 cursor-pointer">
-              <span className="text-muted-foreground">Cancellation Policy</span>
-              {InfoIcon && <InfoIcon size={16} />}
-            </HoverCardTrigger>
-
-            {/* HoverCard content */}
-            <HoverCardContent side="left" align="end" className="w-60 p-4 border border-border shadow-md rounded-lg bg-gray-100 mr-4">
-              <h1 className="font-medium mb-2 text-lg">Cancellation Policy</h1>
-              <ul className="list-disc pl-4 space-y-1">
-                {cancellationPolicy.map((rule, index) => (
-                  <li key={index}>{rule}</li>
-                ))}
-              </ul>
-            </HoverCardContent>
-          </HoverCard>
         </div>
+      )}
 
+      {/* Book button */}
+      <div className="pt-1">
+        <button
+          type="button"
+          onClick={handleClick}
+          disabled={(!selectedRoom && isAuthenticated) || bookingLoading}
+          className="w-full py-4 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed shadow-lg hover:opacity-90 active:scale-95"
+          style={{ background: 'linear-gradient(135deg, #0e4f8a, #0284c7)' }}
+        >
+          {bookingLoading ? (
+            <><Loader2 size={16} className="animate-spin" /> Confirming Booking...</>
+          ) : !isAuthenticated ? (
+            <><LogIn size={16} /> Sign in to Book</>
+          ) : !selectedRoom ? (
+            'Select a room to continue'
+          ) : (
+            <><Sparkles size={16} /> Book Now &mdash; &#8377;{total.toLocaleString('en-IN')}</>
+          )}
+        </button>
+      </div>
 
-
+      {/* What happens next */}
+      {isAuthenticated && selectedRoom && !bookingLoading && (
+        <div className="bg-green-50 border border-green-100 rounded-xl p-3 space-y-1.5">
+          <p className="text-xs font-semibold text-green-800 flex items-center gap-1.5">
+            <CheckCircle2 size={13} /> What happens when you book:
+          </p>
+          <ul className="text-xs text-green-700 space-y-1 pl-5 list-disc">
+            <li>Room inventory is locked instantly</li>
+            <li>Booking appears in your profile</li>
+            <li>Confirmation shown immediately</li>
+          </ul>
         </div>
-    </section>
-  )
-}
+      )}
 
-export default HotelCheckOutCard
+      <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+        <Lock size={11} />
+        Secure reservation &middot; Instant confirmation
+      </div>
+    </div>
+  );
+};
+
+export default HotelCheckOutCard;
+
+

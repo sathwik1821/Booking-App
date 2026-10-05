@@ -1,133 +1,123 @@
-import icons from '@/lib/icons';
-import React from 'react';
+﻿import React from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { MapPin, Star, Wifi, Car, Coffee, Dumbbell, Waves } from 'lucide-react';
 
-const StarIcon=icons["star"];
-const CheckIcon=icons["check"];
+const FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&auto=format&fit=crop&q=70',
+  'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&auto=format&fit=crop&q=70',
+  'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=600&auto=format&fit=crop&q=70',
+  'https://images.unsplash.com/photo-1529290130-4ca3753253ae?w=600&auto=format&fit=crop&q=70',
+];
 
-const hotelInfo = {
-  description:
-    'A boutique resort with an Indo-Portuguese architecture, the Ronil Goa offers lively holidays filled with recreational activities.',
-  details: {
-    type: 'Entire Homestay',
-    bedrooms: 1,
-    guests: 4,
-    policies: ['Free Cancellation', 'Book with ₹0 Payment'],
-  },
-  rating: {
-    score: 4.8,
-    text: 'Excellent',
-    reviews: 8,
-  },
+const AMENITY_ICONS = {
+  wifi: Wifi, parking: Car, breakfast: Coffee, gym: Dumbbell, pool: Waves,
 };
 
-const HotelImages = ({ photos }) => {
-  const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-  const imageHoverHandler = (imageIndex) => {
-    setActiveImageIndex(imageIndex);
-  };
+const getAmenityIcon = (amenity) => {
+  const lower = amenity?.toLowerCase() ?? '';
+  if (lower.includes('wifi') || lower.includes('wi-fi')) return Wifi;
+  if (lower.includes('park') || lower.includes('car')) return Car;
+  if (lower.includes('breakfast') || lower.includes('coffee')) return Coffee;
+  if (lower.includes('gym') || lower.includes('fitness')) return Dumbbell;
+  if (lower.includes('pool') || lower.includes('swim')) return Waves;
+  return null;
+};
+
+const HotelCard = ({ id, name, city, photos, amenities = [], price, index = 0 }) => {
+  const [searchParams] = useSearchParams();
+
+  const imageUrl = (photos && photos.length > 0 && photos[0])
+    ? photos[0]
+    : FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
+
+  const rating = (4.0 + Math.random() * 0.9).toFixed(1);
+  const reviewCount = Math.floor(Math.random() * 800 + 100);
+
+  const detailsUrl = `/hotels/${id}?${searchParams.toString()}`;
+
   return (
-    <div className="flex flex-col gap-1">
-      <div className="w-60">
+    <Link
+      to={detailsUrl}
+      className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-brand/30 hotel-card-hover shadow-sm hover:shadow-lg transition-all duration-300 animate-fadeIn flex flex-col sm:flex-row"
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
+      {/* Image */}
+      <div className="relative sm:w-72 h-52 sm:h-auto shrink-0 overflow-hidden">
         <img
-          height={138}
-          width={240}
-          className="rounded-sm max-h-[138px] w-full"
-          src={photos[activeImageIndex]}
-          alt={'Hotel Images'}
+          src={imageUrl}
+          alt={name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={(e) => { e.target.src = FALLBACK_IMAGES[0]; }}
         />
-      </div>
-      <div className="grid grid-cols-4 gap-1 w-60">
-        {photos.slice(1).map((image, index) => (
-          <div className="relative overflow-hidden rounded-sm" key={image}>
-            <img
-              height={50}
-              width={60}
-              className="h-12"
-              src={image}
-              alt="Hotel Images"
-              onMouseEnter={() => imageHoverHandler(index + 1)}
-            />
-            {index === photos.length - 2 && (
-              <span className="text-[10px] flex pointer-events-none items-center justify-center font-semibold text-white absolute inset-0 backdrop-blur-sm">
-                View All
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const HotelCard = ({ name, photos, city, id, amenities, price }) => {
-  return (
-    <article className="flex w-full transition-colors border rounded-lg hover:border-primary">
-      <div className="flex flex-1 gap-4 p-4">
-        <HotelImages photos={photos} />
-        <div className="space-y-3">
-          <div className="space-y-0.5">
-            <h2 className="inline text-xl font-bold">
-              {name} &nbsp;
-              {new Array(3).fill(0).map((_, index) => (
-               
-                <StarIcon
-                  key={index}
-                  size="12"
-                  className="inline mb-2 text-yellow-500"
-                />
-              ))}
-            </h2>
-            <p className="text-sm font-semibold text-primary">{city}</p>
-          </div>
-          <div className="flex items-center gap-0.5 text-muted-foreground">
-            <p className="text-sm font-semibold">{hotelInfo.details.type}</p>|
-            <p className="text-sm">{`${hotelInfo.details.bedrooms} Bedroom`}</p>
-            |
-            <p className="text-sm">{`Sleep ${hotelInfo.details.guests} Guests`}</p>
-          </div>
-          <div>
-            <ul className="space-y-1">
-              {amenities.slice(0, 2).map((policy, index) => (
-                <li
-                  key={index}
-                  className="flex items-center gap-1 text-sm text-green-700"
-                >
-                  <CheckIcon icon="check" size="16" className="" />
-                  {policy}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="flex">
-            <p className="text-sm line-clamp-1">{hotelInfo.description}</p>
-            <span className="flex items-center text-xs font-medium shrink-0 text-primary">
-              View More
-            </span>
-          </div>
+        <div className="absolute top-3 left-3">
+          <span className="bg-white/90 backdrop-blur-sm text-foreground text-xs font-semibold px-2 py-1 rounded-lg shadow-sm">
+            ⭐ {rating} ({reviewCount})
+          </span>
+        </div>
+        <div className="absolute top-3 right-3">
+          <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
+            FREE CANCEL
+          </span>
         </div>
       </div>
-      <div className="flex flex-col items-end w-48 p-4 border-l shrink-0">
-        <div>
-          <div className="flex gap-1.5">
-            <p className="text-base font-bold text-brand">
-              {hotelInfo.rating.text}
-            </p>
-            <span className="inline-block px-1 py-0.5 text-sm font-bold text-white rounded bg-brand">
-              {hotelInfo.rating.score}
-            </span>
-          </div>
-          <p className="text-sm text-muted-foreground text-end">
-            &#40;{`${hotelInfo.rating.reviews} Ratings`}&#41;
+
+      {/* Info */}
+      <div className="flex-1 p-5 flex flex-col">
+        <div className="flex-1">
+          <p className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+            <MapPin size={12} />
+            {city}
           </p>
+          <h3 className="font-bold text-lg text-foreground leading-tight group-hover:text-brand transition-colors line-clamp-2" style={{ '--tw-text-opacity': 1 }}>
+            {name}
+          </h3>
+
+          {/* Amenities */}
+          {amenities.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-3">
+              {amenities.slice(0, 5).map((amenity, i) => {
+                const Icon = getAmenityIcon(amenity);
+                return (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-md"
+                  >
+                    {Icon && <Icon size={11} />}
+                    {amenity}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
-        <div className="flex flex-col items-end justify-center flex-1">
-          <p className="text-2xl font-bold">{`₹ ${price.toLocaleString()}`}</p>
-          <p className="text-sm text-muted-foreground">{`+ ₹0 taxes & fees`}</p>
-          <p className="text-sm text-muted-foreground">Per Night</p>
+
+        {/* Price & CTA */}
+        <div className="flex items-end justify-between mt-4 pt-4 border-t border-border">
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">per night from</p>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl font-bold text-foreground">
+                ₹{price ? Math.round(price).toLocaleString('en-IN') : 'N/A'}
+              </span>
+              {price && (
+                <span className="text-sm text-muted-foreground line-through">
+                  ₹{Math.round(price * 1.3).toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-green-600 font-medium mt-0.5">+taxes & fees</p>
+          </div>
+          <div
+            className="px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all shadow-sm cursor-pointer"
+            style={{ backgroundColor: 'oklch(0.28 0.18 240)' }}
+          >
+            View deal
+          </div>
         </div>
       </div>
-    </article>
+    </Link>
   );
 };
 
-export default React.memo(HotelCard);
+export default HotelCard;
+
