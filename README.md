@@ -1,12 +1,64 @@
-# React + Vite
+# Hotel Booking System - React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A feature-rich React frontend for the Hotel Booking & Reservation System, built with **React 18**, **Vite**, **Tailwind CSS**, and **Radix UI**.
 
-Currently, two official plugins are available:
+> ? **Companion Backend**: This client connects to the Spring Boot REST API: [SpringBoot-Based-Hotel-Booking-System](https://github.com/sathwik1821/SpringBoot-Based-Hotel-Booking-System)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ?? Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Landing Page**: Hero section, trending destinations, and service navigation.
+- **Hotel Search**: Live search with city, date range, and guest occupancy filters.
+- **Search Results**: Hotel cards with skeleton loaders, sorting (popularity, price), star rating filters, and price range filters with pagination.
+- **Hotel Details**: Image carousel, amenities, policies, room picker, and checkout card.
+- **Authentication**: Sign Up / Sign In flows with JWT token management and protected routing.
+- **User Profile**: View and manage booking history.
+- **Payment Status**: Real-time booking and payment status page after Stripe checkout.
+
+---
+
+## ??? Tech Stack
+
+- **Framework**: React 18 + Vite
+- **Styling**: Tailwind CSS v4
+- **UI Components**: Radix UI (Popover, Checkbox, HoverCard, Calendar, etc.)
+- **Forms**: React Hook Form + Zod validation
+- **HTTP Client**: Axios with interceptors for JWT auth
+- **Icons**: Lucide React
+- **Routing**: React Router DOM
+
+---
+
+## ?? Getting Started
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/sathwik1821/Booking-App.git
+cd Booking-App
+git checkout search-details-mock
+npm install
+```
+
+### 2. Configure Backend URL
+Update the base URL in `src/lib/axios-instance.js`:
+```js
+baseURL: 'http://localhost:8080/api/v1'
+```
+
+### 3. Run Development Server
+```bash
+npm run dev
+```
+App available at `http://localhost:5173`
+
+---
+
+## ?? Branch Overview
+
+| Branch | Description |
+| :--- | :--- |
+| `main` | Landing page only |
+| `hotel-details` | Hotel details page added |
+| `forms-feature` | Auth forms added |
+| `search-details-mock` | Full app — search, auth, payments, profile (most complete) |
